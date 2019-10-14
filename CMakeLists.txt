@@ -35,6 +35,7 @@ set(
   SOURCE_FILES 
   src/window.cpp
   src/shader.cpp
+  src/object.cpp
   src/main.cpp
 )
 

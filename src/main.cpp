@@ -6,6 +6,7 @@
 
 #include "shader.hpp"
 #include "window.hpp"
+#include "object.hpp"
 
 int main() {
   auto window = Window(16 * 50, 9 * 50, "hello");
@@ -32,46 +33,55 @@ int main() {
   auto id_prog = shader::link({id_vs, id_fs});
   std::cout << "program id: " << id_prog << std::endl;
 
-  // triangle vertices
-  static const GLfloat vertices[] {
-		-1.0f, -1.0f, 0.0f,
-		 1.0f, -1.0f, 0.0f,
-		 0.0f,  1.0f, 0.0f,
-	};
+/*
+  std::vector<vertex> vertices = {
+    {{-0.5f, -0.5f, 0.0f}},
+    {{0.5f, -0.5f, 0.0f}},
+    {{0.0f, 0.5f, 0.0f}}
+  };
+  std::vector<GLuint> indices = {0, 1, 2};
+*/
 
-  GLuint id_va; // vertex array
-  glGenVertexArrays(1, &id_va);
-  glBindVertexArray(id_va);
+/*
+  std::vector<vertex> vertices = {
+    {{-0.5f, -0.5f, 0.0f}},
+    {{0.5f, -0.5f, 0.0f}},
+    {{-0.5f, 0.5f, 0.0f}},
 
-	GLuint id_vb; // vertex buffer
-	glGenBuffers(1, &id_vb);
-	glBindBuffer(GL_ARRAY_BUFFER, id_vb);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    {{0.5f, -0.5f, 0.0f}},
+    {{-0.5f, 0.5f, 0.0f}},
+    {{0.5f, 0.5f, 0.0f}},
+  };
+*/
+
+  std::vector<vertex> vertices = {
+    {{-0.5f, -0.5f, 0.0f}},
+    {{0.5f, -0.5f, 0.0f}},
+    {{-0.5f, 0.5f, 0.0f}},
+    {{0.5f, 0.5f, 0.0f}},
+  };
+
+  std::vector<GLuint> indices = {
+    0, 1, 2,
+    0, 1, 3
+  };
+
+  object obj{vertices, indices};
 
   // main loop
 	while (true) {
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT); // move to window
 
 		glUseProgram(id_prog);
 
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, id_vb);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+    // triangle.render();
+    obj.render();
     
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glDisableVertexAttribArray(0);
-
     window.update();
     // TODO check if ESC waw pressed
 	}
-
-	glDeleteBuffers(1, &id_vb);
-	glDeleteVertexArrays(1, &id_va);
-	glDeleteProgram(id_prog);
 
 	glfwTerminate();
 
 	return 0;
 }
-
