@@ -102,11 +102,12 @@ int main(int argc, char* argv[]) {
 
     step++;
 
+    float v = 2.0 * sin((float)step / 100.0);
+
     model = glm::mat4(1.0f);
-    model = model * glm::scale(glm::vec3(0.5, 0.5, 0.5));
-    model = model * glm::translate(glm::vec3(-0.5, -0.5, 0.0));
-    float v = 4.0 * sin((float)step / 100.0);
-    model = model * glm::translate(glm::vec3(v, v, 0));
+    model = glm::translate(glm::vec3(-0.5, -0.5, 0.0)) * model;
+    model = glm::scale(glm::vec3(0.5, 0.5, 0.5))       * model;
+    model = glm::translate(glm::vec3(v, v, 0))         * model;
 
     glUniformMatrix4fv(shader_.locate_uniform("model"), 1, GL_FALSE, &model[0][0]);
     glUniformMatrix4fv(shader_.locate_uniform("view"), 1, GL_FALSE, &view[0][0]);
