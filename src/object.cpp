@@ -9,7 +9,7 @@
 
 
 object::object(const std::vector<vertex>& vertices, const std::vector<GLuint>& indices) : vertices_(vertices), indices_(indices) {
-  init();
+  // init();
 }
 
 object::object(const std::string& file_path) {

@@ -14,7 +14,7 @@ public:
   ~shader();
   GLuint program_id();
   GLuint locate_uniform(const std::string& name);
-  bool bind();
+  void bind();
 private:
   GLuint program_id_;
   std::map<std::string, GLuint> uniforms_;

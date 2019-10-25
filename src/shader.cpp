@@ -138,3 +138,7 @@ GLuint shader::locate_uniform(const std::string& name) {
   }
   return id;
 }
+
+void shader::bind() {
+		glUseProgram(program_id_);
+}

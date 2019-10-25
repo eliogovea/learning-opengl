@@ -13,34 +13,7 @@
 #include "object.hpp"
 #include "camera.hpp"
 
-int main(int argc, char* argv[]) {
-  if (argc != 3) {
-    std::cout << "usage: ./app vertex_shader_path fragment_shader_path" << std::endl;
-    return 0;
-  }
-
-  auto window = Window(16 * 50, 9 * 50, "hello");
-
-  // load and compile shaders
-  
-  shader shader_{argv[1], argv[2]};
-  shader_.locate_uniform("model");
-  shader_.locate_uniform("view");
-  shader_.locate_uniform("proj");
-
-  
-  int step = 0;
-
-  // glm::mat4 scale = glm::scale(glm::vec3(0.5, 0.5, 0.5));
-  glm::mat4 translate = glm::translate(glm::vec3(-0.5, -0.5, 0.0));
-  glm::mat4 model = translate;
-
-  glm::mat4 view = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-  // glm::mat4 view = glm::lookAt(glm::vec3(-4, 3, 0), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-
-  // glm::mat4 proj = glm::mat4(1.0f);
-  glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-
+namespace objects {
   static std::vector<vertex> vertices_1 = {
     {{0.0f, 0.0f, 0.0f}},
     {{0.5f, 0.0f, 0.0f}},
@@ -99,25 +72,49 @@ int main(int argc, char* argv[]) {
   };
 
   static object cube{vertices_cube, triangles_cube};
+}
 
+int main(int argc, char* argv[]) {
+  if (argc != 3) {
+    std::cout << "usage: ./app vertex_shader_path fragment_shader_path" << std::endl;
+    return 0;
+  }
 
-    // main loop
+  auto window = Window(16 * 50, 9 * 50, "hello");
+
+  shader shader_{argv[1], argv[2]};
+  
+  int step = 0;
+
+  glm::mat4 model{1.0f};
+
+  glm::mat4 view = glm::lookAt(glm::vec3(0, 0, -5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+  glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+
+  objects::cube.init(); // !!!
+  
+  // main loop
 	while (!window.is_closed()) {
     window.clear();
 
-		glUseProgram(shader_.program_id());
+    shader_.bind();
 
     step++;
-    float v = 2 * sin((float)step / 100.0);
-    model = glm::translate(glm::vec3(-0.5, -0.5, 0.0)) * glm::translate(glm::vec3(v, 0, 0));
+
+    model = glm::mat4(1.0f);
+    model = model * glm::scale(glm::vec3(0.5, 0.5, 0.5));
+    model = model * glm::translate(glm::vec3(-0.5, -0.5, 0.0));
+    float v = 4.0 * sin((float)step / 100.0);
+    model = model * glm::translate(glm::vec3(v, v, 0));
 
     glUniformMatrix4fv(shader_.locate_uniform("model"), 1, GL_FALSE, &model[0][0]);
     glUniformMatrix4fv(shader_.locate_uniform("view"), 1, GL_FALSE, &view[0][0]);
     glUniformMatrix4fv(shader_.locate_uniform("proj"), 1, GL_FALSE, &proj[0][0]);
 
-    // triangle_1.render();
-    // pyramid.render();
-    cube.render();
+    // objects::triangle_1.render();
+    // objects::pyramid.render();
+    objects::cube.render();
     
     window.update();
 	}
