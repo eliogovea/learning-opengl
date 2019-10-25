@@ -6,6 +6,8 @@
 
 #include "object.hpp"
 
+
+
 object::object(const std::vector<vertex>& vertices, const std::vector<GLuint>& indices) : vertices_(vertices), indices_(indices) {
   init();
 }
@@ -52,3 +54,5 @@ void object::render() {
 	  glDisableVertexAttribArray(0);
   glBindVertexArray(0);
 }
+
+

@@ -22,30 +22,12 @@ int main(int argc, char* argv[]) {
   auto window = Window(16 * 50, 9 * 50, "hello");
 
   // load and compile shaders
+  
+  shader shader_{argv[1], argv[2]};
+  shader_.locate_uniform("model");
+  shader_.locate_uniform("view");
+  shader_.locate_uniform("proj");
 
-  std::cout << "loading vetex shader" << std::endl;
-  auto code_vs = shader::load(argv[1]);
-  std::cout << "vertex shader code:\n" << code_vs << std::endl;
-
-  std::cout << "loading fragment shader" << std::endl;
-  auto code_fs = shader::load(argv[2]);
-  std::cout << "fragment shader code:\n" << code_fs << std::endl;
-
-  std::cout << "compiling vertex shader" << std::endl;
-  auto id_vs = shader::compile(GL_VERTEX_SHADER, code_vs);
-  std::cout << "vertex shader id: " << id_vs << std::endl;
-
-  std::cout << "compiling fragment shader" << std::endl;
-  auto id_fs = shader::compile(GL_FRAGMENT_SHADER, code_fs);
-  std::cout << "fragment shader id: " << id_fs << std::endl;
-
-  std::cout << "linking ..." << std::endl;
-  auto id_prog = shader::link({id_vs, id_fs});
-  std::cout << "program id: " << id_prog << std::endl;
-
-  GLuint id_model = glGetUniformLocation(id_prog, "model");
-  GLuint id_view  = glGetUniformLocation(id_prog, "view");
-  GLuint id_proj  = glGetUniformLocation(id_prog, "proj");
   
   int step = 0;
 
@@ -59,15 +41,15 @@ int main(int argc, char* argv[]) {
   // glm::mat4 proj = glm::mat4(1.0f);
   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
-  std::vector<vertex> vertices_1 = {
+  static std::vector<vertex> vertices_1 = {
     {{0.0f, 0.0f, 0.0f}},
     {{0.5f, 0.0f, 0.0f}},
     {{0.0f, 0.5f, 0.0f}}
   };
 
-  object triangle_1{vertices_1, std::vector<GLuint>{0, 1, 2}};
+  static object triangle_1{vertices_1, std::vector<GLuint>{0, 1, 2}};
 
-  std::vector<vertex> vertices_pyramid = {
+  static std::vector<vertex> vertices_pyramid = {
     {{0.0f, 0.0f, 0.0f}},
     {{1.0f, 0.0f, 0.0f}},
     {{1.0f, 1.0f, 0.0f}},
@@ -75,16 +57,16 @@ int main(int argc, char* argv[]) {
     {{0.5f, 0.5f, 0.5f}} // top
   };
 
-  std::vector<GLuint> triangles_pyramid = {
+  static std::vector<GLuint> triangles_pyramid = {
     0, 1, 4,
     1, 2, 4,
     2, 3, 4,
     3, 0, 4
   };
 
-  object pyramid{vertices_pyramid, triangles_pyramid};
+  static object pyramid{vertices_pyramid, triangles_pyramid};
 
-  std::vector<vertex> vertices_cube = {
+  static std::vector<vertex> vertices_cube = {
     {{0.0f, 0.0f, 0.0f}},
     {{1.0f, 0.0f, 0.0f}},
     {{1.0f, 1.0f, 0.0f}},
@@ -96,7 +78,7 @@ int main(int argc, char* argv[]) {
     {{0.0f, 1.0f, 1.0f}}
   };
 
-  std::vector<GLuint> triangles_cube = {
+  static std::vector<GLuint> triangles_cube = {
     0, 1, 2,
     2, 3, 0, 
 
@@ -116,21 +98,22 @@ int main(int argc, char* argv[]) {
     6, 7, 4
   };
 
-  object cube{vertices_cube, triangles_cube};
+  static object cube{vertices_cube, triangles_cube};
 
-  // main loop
+
+    // main loop
 	while (!window.is_closed()) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // move to window
 
-		glUseProgram(id_prog);
+		glUseProgram(shader_.program_id());
 
     step++;
     float v = 2 * sin((float)step / 100.0);
     model = glm::translate(glm::vec3(-0.5, -0.5, 0.0)) * glm::translate(glm::vec3(v, 0, 0));
 
-    glUniformMatrix4fv(id_model, 1, GL_FALSE, &model[0][0]);
-    glUniformMatrix4fv(id_view, 1, GL_FALSE, &view[0][0]);
-    glUniformMatrix4fv(id_proj, 1, GL_FALSE, &proj[0][0]);
+    glUniformMatrix4fv(shader_.locate_uniform("model"), 1, GL_FALSE, &model[0][0]);
+    glUniformMatrix4fv(shader_.locate_uniform("view"), 1, GL_FALSE, &view[0][0]);
+    glUniformMatrix4fv(shader_.locate_uniform("proj"), 1, GL_FALSE, &proj[0][0]);
 
     // triangle_1.render();
     // pyramid.render();
@@ -138,8 +121,6 @@ int main(int argc, char* argv[]) {
     
     window.update();
 	}
-
-  glDeleteProgram(id_prog);
 
 	return 0;
 }

@@ -23,3 +23,6 @@ private:
   std::vector<GLuint> indices_;
   GLuint va_, vb_, eb_;
 };
+
+namespace objects {
+  }
