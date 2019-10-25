@@ -36,6 +36,10 @@ Window::Window(int width, int height, const std::string& title) {
   glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 }
 
+void Window::clear() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 bool Window::is_closed() const noexcept {
   return is_closed_;
 }

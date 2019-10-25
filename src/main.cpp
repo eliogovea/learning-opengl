@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 
     // main loop
 	while (!window.is_closed()) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // move to window
+    window.clear();
 
 		glUseProgram(shader_.program_id());
 

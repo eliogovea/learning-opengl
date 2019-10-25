@@ -9,6 +9,7 @@ class Window {
   public:
     Window(int width, int height, const std::string& title);
     virtual ~Window();
+    void clear();
     bool is_closed() const noexcept;
     void update();
   private:
