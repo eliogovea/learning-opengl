@@ -27,7 +27,8 @@ object::object(const std::string& file_path) {
 }
 
 object::~object() {
-  // TODO
+  glDeleteBuffers(1, &vb_);
+  glDeleteVertexArrays(1, &va_);
 }
 
 void object::init() {

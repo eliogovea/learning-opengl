@@ -13,5 +13,5 @@ class Window {
     void update();
   private:
     GLFWwindow* window_; // TODO use unique ptr
-    bool is_closed_{true}; // should use atomic ???
+    bool is_closed_{false}; // should use atomic ???
 };
