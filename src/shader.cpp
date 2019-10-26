@@ -99,19 +99,19 @@ GLuint shader::link(const std::vector<GLuint>& shaders) {
 }
 
 shader::shader(const std::string& vertex_shader, const std::string& fragment_shader) {
-  std::cout << "loading vetex shader" << std::endl;
+  std::cout << "loading vetex shader ..." << std::endl;
   auto code_vs = shader::load(vertex_shader);
-  std::cout << "vertex shader code:\n" << code_vs << std::endl;
+  // std::cout << "vertex shader code:\n" << code_vs << std::endl;
 
-  std::cout << "loading fragment shader" << std::endl;
+  std::cout << "loading fragment shader ..." << std::endl;
   auto code_fs = shader::load(fragment_shader);
-  std::cout << "fragment shader code:\n" << code_fs << std::endl;
+  // std::cout << "fragment shader code:\n" << code_fs << std::endl;
 
-  std::cout << "compiling vertex shader" << std::endl;
+  std::cout << "compiling vertex shader ..." << std::endl;
   auto id_vs = shader::compile(GL_VERTEX_SHADER, code_vs);
   std::cout << "vertex shader id: " << id_vs << std::endl;
 
-  std::cout << "compiling fragment shader" << std::endl;
+  std::cout << "compiling fragment shader ..." << std::endl;
   auto id_fs = shader::compile(GL_FRAGMENT_SHADER, code_fs);
   std::cout << "fragment shader id: " << id_fs << std::endl;
 

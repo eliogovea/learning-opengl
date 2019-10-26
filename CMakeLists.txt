@@ -36,6 +36,8 @@ set(
   src/window.cpp
   src/shader.cpp
   src/object.cpp
+  src/stb_image.c
+  src/texture.cpp
   src/main.cpp
 )
 
