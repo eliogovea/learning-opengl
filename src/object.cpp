@@ -6,8 +6,6 @@
 
 #include "object.hpp"
 
-
-
 object::object(const std::vector<vertex>& vertices, const std::vector<GLuint>& indices) : vertices_(vertices), indices_(indices) {
   // init();
 }
@@ -43,15 +41,20 @@ void object::init() {
     glBufferData(GL_ARRAY_BUFFER, vertices_.size() * sizeof(vertex), &vertices_[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eb_);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_.size() * sizeof(GLuint), &indices_[0], GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
   glBindVertexArray(0);
 }
 
 void object::render() {
   glBindVertexArray(va_);
-    glEnableVertexAttribArray(0);
-      glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
+    glEnableVertexAttribArray(0); // position
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof (vertex), (GLvoid*)0);
+    glEnableVertexAttribArray(1); // color
+      glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof (vertex), (GLvoid*)(3 * sizeof (GLfloat)));
+    glEnableVertexAttribArray(2); // texture
+      glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof (vertex), (GLvoid*)(6 * sizeof (GLfloat)));
+    glDrawElements(GL_TRIANGLES, indices_.size(), GL_UNSIGNED_INT, 0);
 	  glDisableVertexAttribArray(0);
+	  glDisableVertexAttribArray(1);
   glBindVertexArray(0);
 }
 

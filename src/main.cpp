@@ -76,7 +76,7 @@ namespace objects {
 int main(int argc, char* argv[]) {
   if (argc != 3) {
     std::cout << "usage: ./app vertex_shader_path fragment_shader_path" << std::endl;
-    return 0;
+    return 1;
   }
 
   auto window = Window(16 * 50, 9 * 50, "hello");
@@ -91,6 +91,7 @@ int main(int argc, char* argv[]) {
 
   glm::mat4 proj = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
+  // objects::triangle_1.init();
   objects::cube.init(); // !!!
   
   // main loop

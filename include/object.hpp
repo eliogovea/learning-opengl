@@ -7,7 +7,8 @@
 
 struct vertex {
   glm::vec3 position;
-  // TODO add color, ...
+  glm::vec3 color{};
+  glm::vec2 texture_uv{};
 };
 
 class object {
@@ -23,6 +24,3 @@ private:
   std::vector<GLuint> indices_;
   GLuint va_, vb_, eb_;
 };
-
-namespace objects {
-  }
