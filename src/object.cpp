@@ -43,20 +43,29 @@ object::object(const std::string& file_path) {
         GLfloat nx = 0.0f;
         GLfloat ny = 0.0f;
         GLfloat nz = 0.0f;
-        if (3 * idx.texcoord_index + 2 < attrib.vertices.size()) {
-          nx = attrib.vertices[3 * idx.normal_index + 0];
-          ny = attrib.vertices[3 * idx.normal_index + 1];
-          nz = attrib.vertices[3 * idx.normal_index + 2];
+        if (3 * idx.normal_index + 2 < attrib.normals.size()) {
+          nx = attrib.normals[3 * idx.normal_index + 0];
+          ny = attrib.normals[3 * idx.normal_index + 1];
+          nz = attrib.normals[3 * idx.normal_index + 2];
         }
 
         GLfloat tx = 0.0f;
         GLfloat ty = 0.0f;
-        if (2 * idx.texcoord_index + 1 < attrib.vertices.size()) {
-          tx = attrib.vertices[2 * idx.texcoord_index + 0];
-          ty = attrib.vertices[2 * idx.texcoord_index + 1];
+        if (2 * idx.texcoord_index + 1 < attrib.texcoords.size()) {
+          tx = attrib.texcoords[2 * idx.texcoord_index + 0];
+          ty = attrib.texcoords[2 * idx.texcoord_index + 1];
         }
 
-        vertices_.emplace_back(glm::vec3{vx, vy, vz}, glm::vec3{nx, ny, nz}, glm::vec2{tx, ty});
+        GLfloat r = 0.0f;
+        GLfloat g = 0.0f;
+        GLfloat b = 0.0f;
+        if (3 * idx.vertex_index + 2 < attrib.colors.size()) {
+          r = attrib.colors[2 * idx.vertex_index + 0];
+          g = attrib.colors[2 * idx.vertex_index + 1];
+          b = attrib.colors[2 * idx.vertex_index + 2];
+        }
+
+        vertices_.emplace_back(glm::vec3{vx, vy, vz}, glm::vec3{r, g, b}, glm::vec2{tx, ty});
       }
       offset += face_size;
     }
