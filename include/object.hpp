@@ -9,6 +9,9 @@ struct vertex {
   glm::vec3 position;
   glm::vec3 color{};
   glm::vec2 texture_uv{};
+
+  vertex(glm::vec3 position, glm::vec3 color, glm::vec2 texture_uv)
+    : position(position), color(color), texture_uv(texture_uv) {}
 };
 
 class object {

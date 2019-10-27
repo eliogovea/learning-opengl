@@ -38,6 +38,7 @@ set(
   src/object.cpp
   src/stb_image.c
   src/texture.cpp
+  src/tiny_obj_loader.cpp
   src/main.cpp
 )
 
