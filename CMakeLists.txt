@@ -39,6 +39,7 @@ set(
   src/stb_image.c
   src/texture.cpp
   src/tiny_obj_loader.cpp
+  src/camera.cpp
   src/main.cpp
 )
 
