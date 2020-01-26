@@ -32,7 +32,7 @@ include_directories(${GLEW_INCLUDE_DIRS})
 find_package(glfw3 REQUIRED)
 
 set(
-  SOURCE_FILES 
+  SOURCE_FILES
   src/window.cpp
   src/shader.cpp
   src/object.cpp
@@ -40,6 +40,9 @@ set(
   src/texture.cpp
   src/tiny_obj_loader.cpp
   src/camera.cpp
+  src/filter.cpp
+  src/util.cpp
+  src/serial_reader.cpp
   src/main.cpp
 )
 
@@ -49,4 +52,5 @@ target_link_libraries(
   OpenGL::GL 
   GLEW::GLEW
   glfw
+  boost_system
 ) 
