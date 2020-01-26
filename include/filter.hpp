@@ -7,6 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #include "serial_reader.hpp"
 
@@ -23,7 +25,13 @@ struct mpu {
 			auto line = serial.read_one();
 			std::stringstream ss(line);
 			ss >> acc.x >> acc.y >> acc.z >> gyro.x >> gyro.y >> gyro.z >> dt;
-			dt *= 0.001;;
+			acc.x /= 16384.0;
+			acc.y /= 16384.0;
+			acc.z /= 16384.0;
+			gyro.x /= 131.0;
+			gyro.y /= 131.0;
+			gyro.z /= 131.0;
+			dt *= 0.001;
 			return true;
 		} catch (...) {
 			std::cout << "read error\n";
@@ -73,4 +81,15 @@ class filter_0 : public filter {
 public:
 	filter_0(mpu mpu_);
 	bool update() override;
+};
+
+class filter_complementary : public filter {
+public:
+	filter_complementary(mpu mpu_);
+	bool update() override;
+private:
+	glm::quat qw_{1, 0, 0, 0};
+	float sum_ax_{0}, sum_ay_{0}, sum_az_{0};
+	int steps_{0};
+	int max_steps_{5};
 };

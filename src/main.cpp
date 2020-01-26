@@ -32,6 +32,13 @@ int main(int argc, char* argv[]) {
 
   shader shader_{argv[2], argv[3]};
   texture texture_{argv[4]};
+
+  object axis{"../resources/objects/cylinder.obj"};
+  axis.init();
+
+  texture x_axis_texture{"../resources/textures/blue.jpeg"};
+  texture y_axis_texture{"../resources/textures/red.jpeg"};
+  texture z_axis_texture{"../resources/textures/green.jpeg"};
   
   glm::mat4 model{1.0f};
 
@@ -46,17 +53,23 @@ int main(int argc, char* argv[]) {
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //
 
-  reader serial{"/dev/ttyACM0", 9600};
+  reader serial{"/dev/ttyACM0", 19200};
   mpu mpu_{serial};
 
   filter_0 filter_mock{mpu_};
+  filter_complementary cf{mpu_};
+
   const glm::vec3 world_x{1, 0, 0};
   const glm::vec3 world_y{0, 1, 0};
   const glm::vec3 world_z{0, 0, 1};
 
+  filter& filter_ = filter_mock;
+  // filter& filter_ = cf;
+
   // main loop
   while (!window.is_closed()) {
-    filter_mock.update(); // input
+    // input
+    filter_.update();
 
     window.clear();
 
@@ -64,13 +77,45 @@ int main(int argc, char* argv[]) {
     glm::mat4 view = camera_.get_matrix();
     glUniformMatrix4fv(shader_.locate_uniform("view"), 1, GL_FALSE, &view[0][0]);
 
+    // axis_y
+    model = glm::mat4(1.0f);
+    model = glm::scale(glm::vec3(0.1, 1, 0.1)) * model;
+    model = filter_.model()                    * model;
+
     shader_.bind();
     glUniformMatrix4fv(shader_.locate_uniform("model"), 1, GL_FALSE, &model[0][0]);
 
+    y_axis_texture.bind();
+    axis.render();
+ 
+    // axis_x
+    model = glm::mat4(1.0f);
+    model = glm::rotate(model, (float)(0.5f * M_PI), glm::vec3{0.0f, 0.0f, 1.0f});
+    model = glm::scale(glm::vec3(1, 0.1, 0.1)) * model;
+    model = filter_.model()                    * model;
+
+    shader_.bind();
+    glUniformMatrix4fv(shader_.locate_uniform("model"), 1, GL_FALSE, &model[0][0]);
+
+    x_axis_texture.bind();
+    axis.render();
+
+    // axis_z
+    model = glm::mat4(1.0f);
+    model = glm::rotate(model, (float)(0.5f * M_PI), glm::vec3{1.0f, 0.0f, 0.0f});
+    model = glm::scale(glm::vec3(0.1, 0.1, 1)) * model;
+    model = filter_.model()                    * model;
+
+    shader_.bind();
+    glUniformMatrix4fv(shader_.locate_uniform("model"), 1, GL_FALSE, &model[0][0]);
+
+    z_axis_texture.bind();
+    axis.render();
+
     // obj
     model = glm::mat4(1.0f);
-    model = glm::scale(glm::vec3(2, 2, 0.4)) * model;
-    model = filter_mock.model()              * model;
+    model = glm::scale(glm::vec3(0.5, 0.5, 0.5)) * model;
+    model = filter_.model()                    * model;
 
     shader_.bind();
     glUniformMatrix4fv(shader_.locate_uniform("model"), 1, GL_FALSE, &model[0][0]);
